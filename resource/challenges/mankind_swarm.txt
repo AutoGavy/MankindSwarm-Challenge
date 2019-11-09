@@ -1,0 +1,9 @@
+"CHALLENGE" {
+	"name"	"Mankind Swarm"
+	"description"	"Officer + Dual Railguns = Drone, Special Weapon + Dual Railguns = Mortarbug, Medic + Dual Railguns = Shaman, Tech + Dual Railguns = Harvester; Press [SPACE] to Attack, Shaman can Extinguish or Cure infection."
+
+	"convars" {
+		"rd_ready_mark_override"			"1"
+		"rd_override_allow_rotate_camera"		"1"
+	}
+}
