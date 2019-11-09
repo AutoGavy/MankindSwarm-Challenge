@@ -30,7 +30,7 @@ Good Drones Organization
 
 ~~Kamen Rider Drone - Harvester Form~~ ~~"Change - Harvest  Form"~~
 
-~~Kamen Rider Drone - Ranger Form ~~ ~~"Change - Ranger  Form"~~
+~~Kamen Rider Drone - Ranger Form~~ ~~"Change - Ranger  Form"~~
 
 ~~Kamen Rider Drone - Hyper Form~~ ~~"Change - Hyper  Drone"~~
 
