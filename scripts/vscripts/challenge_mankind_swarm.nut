@@ -1024,13 +1024,13 @@ function ChangeDrone(hMarine, bRealMode)
 	//hMarine.__KeyValueFromFloat("modelscale", 1.3);
 	if (hMarine.GetMarineName() == "Sarge")
 	{
-		hMarine.SetHealth(511);
-		hMarine.SetMaxHealth(511);
+		hMarine.SetHealth(500);
+		hMarine.SetMaxHealth(500);
 	}
 	else
 	{
-		hMarine.SetHealth(496);
-		hMarine.SetMaxHealth(496);
+		hMarine.SetHealth(490);
+		hMarine.SetMaxHealth(490);
 	}
 	hMarine.DropWeapon(0);
 	hMarine.DropWeapon(1);
@@ -1134,17 +1134,15 @@ function ChangeHarvester(hMarine, bRealMode)
 	if (!bRealMode)
 		return;
 	
-	
-	
 	if (hMarine.GetMarineName() == "Crash")
 	{
-		hMarine.SetHealth(466);
-		hMarine.SetMaxHealth(466);
+		hMarine.SetHealth(460);
+		hMarine.SetMaxHealth(460);
 	}
 	else
 	{
-		hMarine.SetHealth(511);
-		hMarine.SetMaxHealth(511);
+		hMarine.SetHealth(500);
+		hMarine.SetMaxHealth(500);
 	}
 	hMarine.DropWeapon(0);
 	hMarine.DropWeapon(1);
