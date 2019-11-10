@@ -34,4 +34,4 @@ Good Drones Organization
 
 ~~Kamen Rider Drone - Hyper Form~~ ~~"Change - Hyper  Drone"~~
 
-Challenge contains two editions: Mankind Swarm - Carnage Edition, Mankind Swarm - Prespawn Edition
+Challenge contains three editions: Mankind Swarm - Carnage Edition, Mankind Swarm - MAW Edition, Mankind Swarm - Prespawn Edition
