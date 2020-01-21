@@ -1201,18 +1201,25 @@ function DroneTargetFilter(strName)
 	{
 		case "prop_physics":
 			bValue = true;
+			break;
 		case "asw_door":
 			bValue = true;
+			break;
 		case "asw_barrel_explosive":
 			bValue = true;
+			break;
 		case "asw_barrel_radioactive":
 			bValue = true;
+			break;
 		case "asw_sentry_base":
 			bValue = true;
+			break;
 		case "asw_marine":
-			bValue = true;
+			bValue = false;
+			break;
 		case "func_breakable_surf":
 			bValue = true;
+			break;
 	}
 	return bValue;
 }
