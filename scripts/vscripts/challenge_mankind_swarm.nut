@@ -44,11 +44,12 @@ class cMarine
 	
 	m_hMarine = null;
 	m_strName = null;
+	m_hDroneTarget = null;
 	m_strBeamTargetname = null;
-	m_hBeamTarget = {slot = null};
-	m_hBeamParticle = {slot = null};
-	m_hIdleProp = {slot = null};
-	m_hRunProp = {slot = null};
+	m_hBeamTarget = null;
+	m_hBeamParticle = null;
+	m_hIdleProp = null;
+	m_hRunProp = null;
 	m_bOnFire = false;
 	m_bEmiting = false;
 	m_bIsAttacking = false;
@@ -242,7 +243,6 @@ function OnGameplayStart()
 			hTimer.ValidateScriptScope();
 			
 			hTimer.GetScriptScope().weaponProp <- weaponProp;
-			hTimer.GetScriptScope().vecAngles <- vecAngles;
 			hTimer.GetScriptScope().TimerFunc <- function()
 			{
 				if (weaponProp != null && weaponProp.IsValid())
@@ -310,7 +310,6 @@ function OnGameplayStart()
 			hTimer.ValidateScriptScope();
 			
 			hTimer.GetScriptScope().weaponProp <- weaponProp;
-			hTimer.GetScriptScope().vecAngles <- vecAngles;
 			hTimer.GetScriptScope().TimerFunc <- function()
 			{
 				if (weaponProp != null && weaponProp.IsValid())
@@ -372,7 +371,6 @@ function OnGameplayStart()
 			hTimer.ValidateScriptScope();
 			
 			hTimer.GetScriptScope().weaponProp <- weaponProp;
-			hTimer.GetScriptScope().vecAngles <- vecAngles;
 			hTimer.GetScriptScope().TimerFunc <- function()
 			{
 				if (weaponProp != null && weaponProp.IsValid())
@@ -437,7 +435,6 @@ function OnGameplayStart()
 			hTimer.ValidateScriptScope();
 			
 			hTimer.GetScriptScope().weaponProp <- weaponProp;
-			hTimer.GetScriptScope().vecAngles <- vecAngles;
 			hTimer.GetScriptScope().TimerFunc <- function()
 			{
 				if (weaponProp != null && weaponProp.IsValid())
@@ -494,7 +491,6 @@ function OnGameplayStart()
 			hTimer.ValidateScriptScope();
 			
 			hTimer.GetScriptScope().weaponProp <- weaponProp;
-			hTimer.GetScriptScope().vecAngles <- vecAngles;
 			hTimer.GetScriptScope().TimerFunc <- function()
 			{
 				if (weaponProp != null && weaponProp.IsValid())
@@ -583,7 +579,6 @@ function OnGameplayStart()
 			hTimer.ValidateScriptScope();
 			
 			hTimer.GetScriptScope().weaponProp <- weaponProp;
-			hTimer.GetScriptScope().vecAngles <- vecAngles;
 			hTimer.GetScriptScope().TimerFunc <- function()
 			{
 				if (weaponProp != null && weaponProp.IsValid())
@@ -743,7 +738,6 @@ function Update()
 			hTimer.ValidateScriptScope();
 			
 			hTimer.GetScriptScope().weaponProp <- weaponProp;
-			hTimer.GetScriptScope().vecAngles <- vecAngles;
 			hTimer.GetScriptScope().TimerFunc <- function()
 			{
 				if (weaponProp != null && weaponProp.IsValid())
@@ -1034,15 +1028,17 @@ function ChangeDrone(hMarine, bRealMode)
 	}
 	hMarine.DropWeapon(0);
 	hMarine.DropWeapon(1);
-	local target = Entities.CreateByClassname("info_target");
-	target.SetOwner(hMarine);
-	target.ValidateScriptScope();
-	target.GetScriptScope().delay <- Time();
-	target.GetScriptScope().DamageFilter <- DamageFilter;
-	target.GetScriptScope().DroneTargetFilter <- DroneTargetFilter;
-	target.GetScriptScope().cTarget <- MarineManager[GetMarineIndex(hMarine)];
-	target.GetScriptScope().DroneThinkFunc <- DroneThinkFunc;
-	AddThinkToEnt(target, "DroneThinkFunc");
+	
+	local cTarget = MarineManager[GetMarineIndex(hMarine)];
+	cTarget.m_hDroneTarget = Entities.CreateByClassname("info_target");
+	cTarget.m_hDroneTarget.SetOwner(hMarine);
+	cTarget.m_hDroneTarget.ValidateScriptScope();
+	cTarget.m_hDroneTarget.GetScriptScope().delay <- Time();
+	cTarget.m_hDroneTarget.GetScriptScope().DamageFilter <- DamageFilter;
+	cTarget.m_hDroneTarget.GetScriptScope().DroneTargetFilter <- DroneTargetFilter;
+	cTarget.m_hDroneTarget.GetScriptScope().cTarget <- cTarget;
+	cTarget.m_hDroneTarget.GetScriptScope().DroneThinkFunc <- DroneThinkFunc;
+	AddThinkToEnt(cTarget.m_hDroneTarget, "DroneThinkFunc");
 }
 
 function ChangeRanger(hMarine, bRealMode)
@@ -1058,17 +1054,19 @@ function ChangeRanger(hMarine, bRealMode)
 	hMarine.SetMaxHealth(hMarine.GetHealth());
 	hMarine.DropWeapon(0);
 	hMarine.DropWeapon(1);
-	local target = Entities.CreateByClassname("info_target");
-	target.SetOwner(hMarine);
-	target.ValidateScriptScope();
-	target.GetScriptScope().delay <- Time();
-	target.GetScriptScope().CreateParticle <- CreateParticle;
-	target.GetScriptScope().DamageFilter <- DamageFilter;
-	target.GetScriptScope().DroneTargetFilter <- DroneTargetFilter;
-	target.GetScriptScope().RangerSoundScript <- RangerSoundScript;
-	target.GetScriptScope().RangerThinkFunc <- RangerThinkFunc;
-	target.GetScriptScope().MoveForward <- MoveForward;
-	AddThinkToEnt(target, "RangerThinkFunc");
+	
+	local cTarget = MarineManager[GetMarineIndex(hMarine)];
+	cTarget.m_hDroneTarget = Entities.CreateByClassname("info_target");
+	cTarget.m_hDroneTarget.SetOwner(hMarine);
+	cTarget.m_hDroneTarget.ValidateScriptScope();
+	cTarget.m_hDroneTarget.GetScriptScope().delay <- Time();
+	cTarget.m_hDroneTarget.GetScriptScope().CreateParticle <- CreateParticle;
+	cTarget.m_hDroneTarget.GetScriptScope().DamageFilter <- DamageFilter;
+	cTarget.m_hDroneTarget.GetScriptScope().DroneTargetFilter <- DroneTargetFilter;
+	cTarget.m_hDroneTarget.GetScriptScope().RangerSoundScript <- RangerSoundScript;
+	cTarget.m_hDroneTarget.GetScriptScope().RangerThinkFunc <- RangerThinkFunc;
+	cTarget.m_hDroneTarget.GetScriptScope().MoveForward <- MoveForward;
+	AddThinkToEnt(cTarget.m_hDroneTarget, "RangerThinkFunc");
 }
 
 function ChangeMortar(hMarine, bRealMode)
@@ -1092,14 +1090,16 @@ function ChangeMortar(hMarine, bRealMode)
 	}
 	hMarine.DropWeapon(0);
 	hMarine.DropWeapon(1);
-	local target = Entities.CreateByClassname("info_target");
-	target.SetOwner(hMarine);
-	target.ValidateScriptScope();
-	target.GetScriptScope().delay <- Time();
-	target.GetScriptScope().MaxFunc <- MaxFunc;
-	target.GetScriptScope().LaunchVector <- LaunchVector;
-	target.GetScriptScope().MortarThinkFunc <- MortarThinkFunc;
-	AddThinkToEnt(target, "MortarThinkFunc");
+	
+	local cTarget = MarineManager[GetMarineIndex(hMarine)];
+	cTarget.m_hDroneTarget = Entities.CreateByClassname("info_target");
+	cTarget.m_hDroneTarget.SetOwner(hMarine);
+	cTarget.m_hDroneTarget.ValidateScriptScope();
+	cTarget.m_hDroneTarget.GetScriptScope().delay <- Time();
+	cTarget.m_hDroneTarget.GetScriptScope().MaxFunc <- MaxFunc;
+	cTarget.m_hDroneTarget.GetScriptScope().LaunchVector <- LaunchVector;
+	cTarget.m_hDroneTarget.GetScriptScope().MortarThinkFunc <- MortarThinkFunc;
+	AddThinkToEnt(cTarget.m_hDroneTarget, "MortarThinkFunc");
 }
 
 function ChangeShaman(hMarine, bRealMode)
@@ -1115,14 +1115,16 @@ function ChangeShaman(hMarine, bRealMode)
 	hMarine.SetMaxHealth(120);
 	hMarine.DropWeapon(0);
 	hMarine.DropWeapon(1);
-	local target = Entities.CreateByClassname("info_target");
-	target.SetOwner(hMarine);
-	target.ValidateScriptScope();
-	target.GetScriptScope().delay <- Time();
-	target.GetScriptScope().CreateParticle <- CreateParticle;
-	target.GetScriptScope().cTarget <- MarineManager[GetMarineIndex(hMarine)];
-	target.GetScriptScope().ShamanThinkFunc <- ShamanThinkFunc;
-	AddThinkToEnt(target, "ShamanThinkFunc");
+	
+	local cTarget = MarineManager[GetMarineIndex(hMarine)];
+	cTarget.m_hDroneTarget = Entities.CreateByClassname("info_target");
+	cTarget.m_hDroneTarget.SetOwner(hMarine);
+	cTarget.m_hDroneTarget.ValidateScriptScope();
+	cTarget.m_hDroneTarget.GetScriptScope().delay <- Time();
+	cTarget.m_hDroneTarget.GetScriptScope().CreateParticle <- CreateParticle;
+	cTarget.m_hDroneTarget.GetScriptScope().cTarget <- MarineManager[GetMarineIndex(hMarine)];
+	cTarget.m_hDroneTarget.GetScriptScope().ShamanThinkFunc <- ShamanThinkFunc;
+	AddThinkToEnt(cTarget.m_hDroneTarget, "ShamanThinkFunc");
 }
 
 function ChangeHarvester(hMarine, bRealMode)
@@ -1146,15 +1148,17 @@ function ChangeHarvester(hMarine, bRealMode)
 	}
 	hMarine.DropWeapon(0);
 	hMarine.DropWeapon(1);
-	local target = Entities.CreateByClassname("info_target");
-	target.SetOwner(hMarine);
-	target.ValidateScriptScope();
-	target.GetScriptScope().delay <- Time();
-	target.GetScriptScope().MaxFunc <- MaxFunc;
-	target.GetScriptScope().LaunchVector <- LaunchVector;
-	target.GetScriptScope().DamageFilter <- DamageFilter;
-	target.GetScriptScope().HarvesterThinkFunc <- HarvesterThinkFunc;
-	AddThinkToEnt(target, "HarvesterThinkFunc");
+	
+	local cTarget = MarineManager[GetMarineIndex(hMarine)];
+	cTarget.m_hDroneTarget = Entities.CreateByClassname("info_target");
+	cTarget.m_hDroneTarget.SetOwner(hMarine);
+	cTarget.m_hDroneTarget.ValidateScriptScope();
+	cTarget.m_hDroneTarget.GetScriptScope().delay <- Time();
+	cTarget.m_hDroneTarget.GetScriptScope().MaxFunc <- MaxFunc;
+	cTarget.m_hDroneTarget.GetScriptScope().LaunchVector <- LaunchVector;
+	cTarget.m_hDroneTarget.GetScriptScope().DamageFilter <- DamageFilter;
+	cTarget.m_hDroneTarget.GetScriptScope().HarvesterThinkFunc <- HarvesterThinkFunc;
+	AddThinkToEnt(cTarget.m_hDroneTarget, "HarvesterThinkFunc");
 }
 
 function RandomSkinNoMed()
@@ -1276,58 +1280,55 @@ function DroneThinkFunc()
 	local hMarine = cTarget.m_hMarine;
 	if (hMarine && hMarine.IsValid())
 	{
-		local hWeapon = NetProps.GetPropEntity(hMarine, "m_hActiveWeapon");
-		if (hWeapon != null)
-		{
-			hMarine.DropWeapon(0);
-			hMarine.DropWeapon(1);
-		}
+		hMarine.DropWeapon(0);
+		hMarine.DropWeapon(1);
+		
 		if (!cTarget.m_bIsAttacking)
 		{
 			if (NetProps.GetPropFloat(hMarine, "m_flPoseParameter") == 0.5)
 			{
-				if (cTarget.m_hRunProp.slot != null)
+				if (cTarget.m_hRunProp != null)
 				{
-					cTarget.m_hRunProp.slot.Destroy();
-					cTarget.m_hRunProp.slot = null;
+					cTarget.m_hRunProp.Destroy();
+					cTarget.m_hRunProp = null;
 				}
-				if (cTarget.m_hIdleProp.slot == null)
+				if (cTarget.m_hIdleProp == null)
 				{
 					local vecAngles = hMarine.GetAngles();
-					cTarget.m_hIdleProp.slot <- Entities.CreateByClassname("prop_dynamic");
-					cTarget.m_hIdleProp.slot.__KeyValueFromString("model", "models/aliens/drone/drone.mdl");
-					cTarget.m_hIdleProp.slot.__KeyValueFromFloat("modelscale", 1.3);
-					cTarget.m_hIdleProp.slot.__KeyValueFromInt("DisableBoneFollowers", 1);
-					cTarget.m_hIdleProp.slot.__KeyValueFromString("solid", "0");
-					cTarget.m_hIdleProp.slot.SetOrigin(hMarine.GetOrigin());
-					cTarget.m_hIdleProp.slot.SetLocalAngles(vecAngles.x, vecAngles.y, vecAngles.z);
-					DoEntFire("!self", "SetDefaultAnimation", "Idle", 0, hMarine, cTarget.m_hIdleProp.slot);
-					DoEntFire("!self", "SetAnimation", "Idle", 0, hMarine, cTarget.m_hIdleProp.slot);
-					DoEntFire("!self", "SetParent", "!activator", 0, hMarine, cTarget.m_hIdleProp.slot);
-					cTarget.m_hIdleProp.slot.Spawn();
+					cTarget.m_hIdleProp = Entities.CreateByClassname("prop_dynamic");
+					cTarget.m_hIdleProp.__KeyValueFromString("model", "models/aliens/drone/drone.mdl");
+					cTarget.m_hIdleProp.__KeyValueFromFloat("modelscale", 1.3);
+					cTarget.m_hIdleProp.__KeyValueFromInt("DisableBoneFollowers", 1);
+					cTarget.m_hIdleProp.__KeyValueFromString("solid", "0");
+					cTarget.m_hIdleProp.SetOrigin(hMarine.GetOrigin());
+					cTarget.m_hIdleProp.SetLocalAngles(vecAngles.x, vecAngles.y, vecAngles.z);
+					DoEntFire("!self", "SetDefaultAnimation", "Idle", 0, hMarine, cTarget.m_hIdleProp);
+					DoEntFire("!self", "SetAnimation", "Idle", 0, hMarine, cTarget.m_hIdleProp);
+					DoEntFire("!self", "SetParent", "!activator", 0, hMarine, cTarget.m_hIdleProp);
+					cTarget.m_hIdleProp.Spawn();
 				}
 			}
 			else
 			{
-				if (cTarget.m_hIdleProp.slot != null)
+				if (cTarget.m_hIdleProp != null)
 				{
-					cTarget.m_hIdleProp.slot.Destroy();
-					cTarget.m_hIdleProp.slot = null;
+					cTarget.m_hIdleProp.Destroy();
+					cTarget.m_hIdleProp = null;
 				}
-				if (cTarget.m_hRunProp.slot == null)
+				if (cTarget.m_hRunProp == null)
 				{
 					local vecAngles = hMarine.GetAngles();
-					cTarget.m_hRunProp.slot <- Entities.CreateByClassname("prop_dynamic");
-					cTarget.m_hRunProp.slot.__KeyValueFromString("model", "models/aliens/drone/drone.mdl");
-					cTarget.m_hRunProp.slot.__KeyValueFromFloat("modelscale", 1.3);
-					cTarget.m_hRunProp.slot.__KeyValueFromInt("DisableBoneFollowers", 1);
-					cTarget.m_hRunProp.slot.__KeyValueFromString("solid", "0");
-					cTarget.m_hRunProp.slot.SetOrigin(hMarine.GetOrigin());
-					cTarget.m_hRunProp.slot.SetLocalAngles(vecAngles.x, vecAngles.y, vecAngles.z);
-					DoEntFire("!self", "SetDefaultAnimation", "Run", 0, hMarine, cTarget.m_hRunProp.slot);
-					DoEntFire("!self", "SetAnimation", "Run", 0, hMarine, cTarget.m_hRunProp.slot);
-					DoEntFire("!self", "SetParent", "!activator", 0, hMarine, cTarget.m_hRunProp.slot);
-					cTarget.m_hRunProp.slot.Spawn();
+					cTarget.m_hRunProp = Entities.CreateByClassname("prop_dynamic");
+					cTarget.m_hRunProp.__KeyValueFromString("model", "models/aliens/drone/drone.mdl");
+					cTarget.m_hRunProp.__KeyValueFromFloat("modelscale", 1.3);
+					cTarget.m_hRunProp.__KeyValueFromInt("DisableBoneFollowers", 1);
+					cTarget.m_hRunProp.__KeyValueFromString("solid", "0");
+					cTarget.m_hRunProp.SetOrigin(hMarine.GetOrigin());
+					cTarget.m_hRunProp.SetLocalAngles(vecAngles.x, vecAngles.y, vecAngles.z);
+					DoEntFire("!self", "SetDefaultAnimation", "Run", 0, hMarine, cTarget.m_hRunProp);
+					DoEntFire("!self", "SetAnimation", "Run", 0, hMarine, cTarget.m_hRunProp);
+					DoEntFire("!self", "SetParent", "!activator", 0, hMarine, cTarget.m_hRunProp);
+					cTarget.m_hRunProp.Spawn();
 				}
 			}
 		}
@@ -1338,15 +1339,15 @@ function DroneThinkFunc()
 			if (delay + 0.61 <= Time())
 			{
 				cTarget.m_bIsAttacking = true;
-				if (cTarget.m_hIdleProp.slot != null)
+				if (cTarget.m_hIdleProp != null)
 				{
-					cTarget.m_hIdleProp.slot.Destroy();
-					cTarget.m_hIdleProp.slot = null;
+					cTarget.m_hIdleProp.Destroy();
+					cTarget.m_hIdleProp = null;
 				}
-				if (cTarget.m_hRunProp.slot != null)
+				if (cTarget.m_hRunProp != null)
 				{
-					cTarget.m_hRunProp.slot.Destroy();
-					cTarget.m_hRunProp.slot = null;
+					cTarget.m_hRunProp.Destroy();
+					cTarget.m_hRunProp = null;
 				}
 				hMarine.EmitSound("ASW_Drone.Attack");
 				hMarine.__KeyValueFromInt("modelscale", 0);
@@ -1406,12 +1407,8 @@ function RangerThinkFunc()
 	local hMarine = self.GetOwner();
 	if (hMarine && hMarine.IsValid())
 	{
-		local hWeapon = NetProps.GetPropEntity(hMarine, "m_hActiveWeapon");
-		if (hWeapon != null)
-		{
-			hMarine.DropWeapon(0);
-			hMarine.DropWeapon(1);
-		}
+		hMarine.DropWeapon(0);
+		hMarine.DropWeapon(1);
 		
 		if (NetProps.GetPropInt(hMarine, "m_bFaceMeleeYaw"))
 		{
@@ -1539,12 +1536,8 @@ function MortarThinkFunc()
 	local hMarine = self.GetOwner();
 	if (hMarine && hMarine.IsValid())
 	{
-		local hWeapon = NetProps.GetPropEntity(hMarine, "m_hActiveWeapon");
-		if (hWeapon != null)
-		{
-			hMarine.DropWeapon(0);
-			hMarine.DropWeapon(1);
-		}
+		hMarine.DropWeapon(0);
+		hMarine.DropWeapon(1);
 
 		if (NetProps.GetPropInt(hMarine, "m_bFaceMeleeYaw"))
 		{
@@ -1621,12 +1614,8 @@ function ShamanThinkFunc()
 	local hMarine = cTarget.m_hMarine;
 	if (hMarine && hMarine.IsValid())
 	{
-		local hWeapon = NetProps.GetPropEntity(hMarine, "m_hActiveWeapon");
-		if (hWeapon != null)
-		{
-			hMarine.DropWeapon(0);
-			hMarine.DropWeapon(1);
-		}
+		hMarine.DropWeapon(0);
+		hMarine.DropWeapon(1);
 		
 		if (NetProps.GetPropInt(hMarine, "m_bFaceMeleeYaw"))
 		{
@@ -1675,27 +1664,27 @@ function ShamanThinkFunc()
 							hEntity.SetHealth(hEntity.GetHealth() + 1);
 							
 							bShouldDelete = false;
-							if (cTarget.m_hBeamTarget.slot == null)
+							if (cTarget.m_hBeamTarget == null)
 							{
-								cTarget.m_hBeamTarget.slot <- Entities.CreateByClassname("info_target");
-								cTarget.m_hBeamTarget.slot.SetOrigin(hEntity.GetOrigin() + Vector(0, 0, 20));
-								cTarget.m_hBeamTarget.slot.__KeyValueFromString("spawnflags", "2");
-								cTarget.m_hBeamTarget.slot.__KeyValueFromString("targetname", cTarget.m_strBeamTargetname);
-								cTarget.m_hBeamTarget.slot.Spawn();
-								cTarget.m_hBeamTarget.slot.Activate();
+								cTarget.m_hBeamTarget = Entities.CreateByClassname("info_target");
+								cTarget.m_hBeamTarget.SetOrigin(hEntity.GetOrigin() + Vector(0, 0, 20));
+								cTarget.m_hBeamTarget.__KeyValueFromString("spawnflags", "2");
+								cTarget.m_hBeamTarget.__KeyValueFromString("targetname", cTarget.m_strBeamTargetname);
+								cTarget.m_hBeamTarget.Spawn();
+								cTarget.m_hBeamTarget.Activate();
 							}
-							if (cTarget.m_hBeamParticle.slot == null)
+							if (cTarget.m_hBeamParticle == null)
 							{
-								cTarget.m_hBeamParticle.slot <- Entities.CreateByClassname("info_particle_system");						
-								cTarget.m_hBeamParticle.slot.__KeyValueFromString("effect_name", "shaman_heal_attach");
-								cTarget.m_hBeamParticle.slot.__KeyValueFromString("cpoint1", cTarget.m_strBeamTargetname);
-								cTarget.m_hBeamParticle.slot.__KeyValueFromString("start_active", "1");
-								cTarget.m_hBeamParticle.slot.SetOrigin(hMarine.GetOrigin() + Vector(0, 0, 25));
-								cTarget.m_hBeamParticle.slot.Spawn();
-								cTarget.m_hBeamParticle.slot.Activate();
-								DoEntFire("!self", "SetParent", "!activator", 0, hMarine, cTarget.m_hBeamParticle.slot);
+								cTarget.m_hBeamParticle = Entities.CreateByClassname("info_particle_system");						
+								cTarget.m_hBeamParticle.__KeyValueFromString("effect_name", "shaman_heal_attach");
+								cTarget.m_hBeamParticle.__KeyValueFromString("cpoint1", cTarget.m_strBeamTargetname);
+								cTarget.m_hBeamParticle.__KeyValueFromString("start_active", "1");
+								cTarget.m_hBeamParticle.SetOrigin(hMarine.GetOrigin() + Vector(0, 0, 25));
+								cTarget.m_hBeamParticle.Spawn();
+								cTarget.m_hBeamParticle.Activate();
+								DoEntFire("!self", "SetParent", "!activator", 0, hMarine, cTarget.m_hBeamParticle);
 							}
-							DoEntFire("!self", "SetParent", "!activator", 0, hEntity, cTarget.m_hBeamTarget.slot);
+							DoEntFire("!self", "SetParent", "!activator", 0, hEntity, cTarget.m_hBeamTarget);
 						}
 					}
 				}
@@ -1706,15 +1695,15 @@ function ShamanThinkFunc()
 						hMarine.StopSound("ASW_MedGrenade.ActiveLoop");
 						cTarget.m_bEmiting = false;
 					}
-					if (cTarget.m_hBeamTarget.slot != null)
+					if (cTarget.m_hBeamTarget != null)
 					{
-						DoEntFire("!self", "Kill", "", 0, null, cTarget.m_hBeamTarget.slot);
-						cTarget.m_hBeamTarget.slot <- null;
+						DoEntFire("!self", "Kill", "", 0, null, cTarget.m_hBeamTarget);
+						cTarget.m_hBeamTarget = null;
 					}
-					if (cTarget.m_hBeamParticle.slot != null)
+					if (cTarget.m_hBeamParticle != null)
 					{
-						DoEntFire("!self", "Kill", "", 0, null, cTarget.m_hBeamParticle.slot);
-						cTarget.m_hBeamParticle.slot <- null;
+						DoEntFire("!self", "Kill", "", 0, null, cTarget.m_hBeamParticle);
+						cTarget.m_hBeamParticle = null;
 					}
 				}
 			}
@@ -1730,12 +1719,8 @@ function HarvesterThinkFunc()
 	local hMarine = self.GetOwner();
 	if (hMarine && hMarine.IsValid())
 	{
-		local hWeapon = NetProps.GetPropEntity(hMarine, "m_hActiveWeapon");
-		if (hWeapon != null)
-		{
-			hMarine.DropWeapon(0);
-			hMarine.DropWeapon(1);
-		}
+		hMarine.DropWeapon(0);
+		hMarine.DropWeapon(1);
 		
 		if (NetProps.GetPropInt(hMarine, "m_bFaceMeleeYaw"))
 		{

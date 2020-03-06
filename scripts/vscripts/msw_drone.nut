@@ -49,7 +49,6 @@ DoEntFire("!self", "Disable", "", 0, null, hTimer);
 hTimer.ValidateScriptScope();
 
 hTimer.GetScriptScope().weaponProp <- weaponProp;
-hTimer.GetScriptScope().vecAngles <- vecAngles;
 hTimer.GetScriptScope().TimerFunc <- function()
 {
 	if (weaponProp != null && weaponProp.IsValid())
